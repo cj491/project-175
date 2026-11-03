@@ -15,6 +15,7 @@ import { addWalk, deleteWalk, saveTargets } from "@/lib/db/repo";
 import { dailySeries } from "@/lib/domain/analytics";
 import { stepsOn, walkMinutesOn, walksOn } from "@/lib/domain/activity";
 import { HealthDevicesCard } from "./health-devices";
+import { ShortcutStepsCard } from "./shortcut-steps";
 import { formatRelativeDay, formatTime, lastNDays } from "@/lib/dates";
 import { stepsSchema, validate, walkMinutesSchema } from "@/lib/validation";
 import { toast } from "@/lib/events";
@@ -233,7 +234,10 @@ export function ActivityScreen() {
 
         <div className="lg:col-span-5">
           <SectionTitle>Connected devices</SectionTitle>
-          <HealthDevicesCard />
+          <div className="space-y-3">
+            <ShortcutStepsCard />
+            <HealthDevicesCard />
+          </div>
         </div>
       </div>
     </Page>

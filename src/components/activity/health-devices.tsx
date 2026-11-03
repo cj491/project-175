@@ -123,7 +123,7 @@ export function HealthDevicesCard() {
         <p className="mt-4 text-xs leading-relaxed text-subtle">
           {provider
             ? "Steps are read only — PROJECT 175 never writes to your health data. Days you entered manually are only replaced if the device counted more steps."
-            : "Apple Health and Health Connect only work in the PROJECT 175 mobile app (Capacitor build). In the browser, enter steps manually — nothing is imported."}
+            : "A direct connection needs the native app (Capacitor build). On iPhone, the Shortcut above already brings in your Apple Health steps."}
         </p>
       )}
     </Card>

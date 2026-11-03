@@ -18,6 +18,7 @@ $SB projects api-keys --remote="$REF" -o json | python3 scripts/pick-public-key.
 
 echo "2/6 Creating tables and security rules"
 $SB db query --remote="$REF" -f supabase/migrations/0001_project175.sql > /dev/null
+$SB db query --remote="$REF" -f supabase/migrations/0003_step_shortcut.sql > /dev/null
 
 echo "3/6 Storing the reminder schedule secret in Vault"
 CRON_SECRET=$(openssl rand -hex 24)
@@ -30,8 +31,8 @@ $SB secrets set --remote="$REF" \
   "VAPID_SUBJECT=$APP_URL" \
   "CRON_SECRET=$CRON_SECRET" > /dev/null
 
-echo "5/6 Deploying the send-reminders function"
-$SB functions deploy send-reminders --remote="$REF" --no-verify-jwt --use-api
+echo "5/6 Deploying the send-reminders and ingest-steps functions"
+$SB functions deploy send-reminders ingest-steps --remote="$REF" --no-verify-jwt --use-api
 
 echo "6/6 Scheduling reminders every 5 minutes"
 $SB db query --remote="$REF" -f supabase/migrations/0002_reminder_cron.sql > /dev/null
