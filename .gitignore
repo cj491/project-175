@@ -44,3 +44,6 @@ next-env.d.ts
 # Capacitor build output
 ios/App/App/public
 android/app/src/main/assets/public
+
+# Supabase CLI cache
+supabase/.temp/
