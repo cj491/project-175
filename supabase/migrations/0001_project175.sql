@@ -82,3 +82,9 @@ create table if not exists public.reminder_log (
 alter table public.reminder_log enable row level security;
 -- No policies or grants: clients can't read or write it.
 revoke all on public.reminder_log from anon, authenticated;
+
+-- The send-reminders function runs as service_role (server only). It bypasses RLS
+-- but still needs table privileges when tables aren't auto-exposed.
+grant select on public.records to service_role;
+grant select, delete on public.push_subscriptions to service_role;
+grant select, insert, delete on public.reminder_log to service_role;
