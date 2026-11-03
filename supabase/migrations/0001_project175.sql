@@ -48,6 +48,11 @@ create policy "own records - insert" on public.records for insert to authenticat
 create policy "own records - update" on public.records for update to authenticated using (user_id = auth.uid()) with check (user_id = auth.uid());
 create policy "own records - delete" on public.records for delete to authenticated using (user_id = auth.uid());
 
+-- Explicit API access (works whether or not "Automatically expose new tables" is on).
+-- Only signed-in users get access, and RLS above limits them to their own rows.
+revoke all on public.records from anon;
+grant select, insert, update, delete on public.records to authenticated;
+
 -- ───────────────────────── Background reminders (web push) ─────────────────────────
 
 create table if not exists public.push_subscriptions (
@@ -63,6 +68,8 @@ alter table public.push_subscriptions enable row level security;
 drop policy if exists "own push subscriptions" on public.push_subscriptions;
 create policy "own push subscriptions" on public.push_subscriptions for all to authenticated
   using (user_id = auth.uid()) with check (user_id = auth.uid());
+revoke all on public.push_subscriptions from anon;
+grant select, insert, update, delete on public.push_subscriptions to authenticated;
 
 -- Written only by the send-reminders edge function (service role); prevents repeats.
 create table if not exists public.reminder_log (
@@ -73,4 +80,5 @@ create table if not exists public.reminder_log (
   primary key (user_id, reminder_id, local_date)
 );
 alter table public.reminder_log enable row level security;
--- No policies: clients can't read or write it.
+-- No policies or grants: clients can't read or write it.
+revoke all on public.reminder_log from anon, authenticated;
